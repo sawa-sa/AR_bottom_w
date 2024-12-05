@@ -70,12 +70,39 @@
         const axisMaterial = new THREE.LineBasicMaterial({ color: 0x888888, transparent: true, opacity: 0.5 });
 
         // XZ平面を白く描画
-        const planeGeometry = new THREE.PlaneGeometry(1, 1);
-        const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.rotation.x = Math.PI / 2; // XZ平面にする
-        plane.position.y = 0; // 平面を原点に配置
-        scene.add(plane);
+        const vertices = new Float32Array([
+            -0.7, 0, -0.7, // 頂点1
+            -0.7, 0,  0.7, // 頂点2
+            0.7, 0,  0.7, // 頂点3
+            0.7, 0, -0.7  // 頂点4
+        ]);
+
+        // 頂点インデックスで三角形を定義
+        const indices = [
+            0, 1, 2, // 三角形1
+            0, 2, 3  // 三角形2
+        ];
+
+        // バッファジオメトリの作成
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); // 頂点を設定
+        geometry.setIndex(indices); // 頂点の順序を設定
+        geometry.computeVertexNormals(); // 法線を計算
+
+        // マテリアルを作成
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        // メッシュを作成
+        const square = new THREE.Mesh(geometry, material);
+
+        // シーンに追加
+        scene.add(square);
+
 
         // 各軸のラインとラベル
         const axes = [
